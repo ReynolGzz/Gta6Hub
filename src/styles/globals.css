@@ -1,0 +1,138 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Dark-mode-only. Deep black canvas with neon accents. */
+    --background: 240 30% 4%;
+    --foreground: 0 0% 98%;
+
+    --card: 250 28% 8%;
+    --card-foreground: 0 0% 98%;
+
+    --popover: 250 30% 6%;
+    --popover-foreground: 0 0% 98%;
+
+    --primary: 326 100% 59%; /* neon pink */
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 262 100% 68%; /* purple */
+    --secondary-foreground: 0 0% 100%;
+
+    --muted: 250 20% 14%;
+    --muted-foreground: 250 12% 65%;
+
+    --accent: 190 100% 56%; /* electric blue */
+    --accent-foreground: 240 30% 6%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 255 25% 16%;
+    --input: 255 25% 16%;
+    --ring: 326 100% 59%;
+
+    --radius: 0.85rem;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-feature-settings: "cv11", "ss01";
+    background-image: radial-gradient(
+        circle at 15% -10%,
+        rgba(255, 45, 155, 0.12),
+        transparent 45%
+      ),
+      radial-gradient(circle at 90% 0%, rgba(34, 211, 255, 0.1), transparent 40%),
+      radial-gradient(
+        circle at 50% 120%,
+        rgba(155, 92, 255, 0.14),
+        transparent 50%
+      );
+    background-attachment: fixed;
+  }
+
+  ::selection {
+    background: rgba(255, 45, 155, 0.35);
+    color: #fff;
+  }
+
+  /* Neon scrollbar */
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, #ff2d9b, #9b5cff);
+    border-radius: 999px;
+    border: 2px solid hsl(var(--background));
+  }
+}
+
+@layer components {
+  /* Glassmorphism surface */
+  .glass {
+    @apply border border-white/10 bg-white/[0.04] backdrop-blur-xl;
+    box-shadow: var(--tw-shadow, 0 8px 32px -8px rgba(0, 0, 0, 0.6));
+  }
+
+  .glass-card {
+    @apply glass rounded-2xl shadow-glass;
+  }
+
+  /* Gradient text */
+  .text-gradient {
+    @apply bg-neon-gradient bg-clip-text text-transparent;
+  }
+
+  .text-gradient-pink {
+    background: linear-gradient(135deg, #ff2d9b, #ff8a3d);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  /* Neon ring / glow border */
+  .neon-border {
+    @apply border border-neon-pink/40;
+    box-shadow: 0 0 24px -8px rgba(255, 45, 155, 0.6);
+  }
+
+  .grid-bg {
+    background-image: linear-gradient(
+        to right,
+        rgba(255, 255, 255, 0.04) 1px,
+        transparent 1px
+      ),
+      linear-gradient(to bottom, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+    background-size: 56px 56px;
+    mask-image: radial-gradient(ellipse at center, black 40%, transparent 75%);
+  }
+}
+
+@layer utilities {
+  .animate-delay-100 {
+    animation-delay: 100ms;
+  }
+  .animate-delay-200 {
+    animation-delay: 200ms;
+  }
+  .animate-delay-300 {
+    animation-delay: 300ms;
+  }
+  .animate-delay-500 {
+    animation-delay: 500ms;
+  }
+}
