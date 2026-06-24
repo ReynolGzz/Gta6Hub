@@ -8,8 +8,9 @@ import { Sparkles, Loader2 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
+import { DiscordIcon } from "@/components/ui/icons";
 
-export function RegisterForm() {
+export function RegisterForm({ discordEnabled = false }: { discordEnabled?: boolean }) {
   const router = useRouter();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -64,6 +65,21 @@ export function RegisterForm() {
         <Button type="submit" className="w-full" disabled={loading}>
           {loading && <Loader2 className="size-4 animate-spin" />} Create account
         </Button>
+        {discordEnabled && (
+          <>
+            <div className="flex items-center gap-3 text-xs text-muted-foreground">
+              <span className="h-px flex-1 bg-white/10" /> or <span className="h-px flex-1 bg-white/10" />
+            </div>
+            <Button
+              type="button"
+              variant="secondary"
+              className="w-full border-[#5865F2]/30 hover:bg-[#5865F2]/10"
+              onClick={() => signIn("discord", { callbackUrl: "/dashboard" })}
+            >
+              <DiscordIcon className="size-4" /> Continue with Discord
+            </Button>
+          </>
+        )}
         <p className="text-center text-xs text-muted-foreground">The first account created becomes the admin.</p>
       </form>
       <p className="mt-6 text-center text-sm text-muted-foreground">

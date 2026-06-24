@@ -1,13 +1,16 @@
 import Link from "next/link";
-import { ArrowRight, Sparkles, Zap, DollarSign, Search as SearchIcon, Bot, Map as MapIcon } from "lucide-react";
+import { ArrowRight, Sparkles, Zap, DollarSign, Search as SearchIcon, Bot, Map as MapIcon, Gift } from "lucide-react";
 import { HeroSearch } from "@/components/search/hero-search";
 import { GlowField } from "@/components/marketing/glow";
 import { Icon } from "@/components/ui/icon";
 import { Badge } from "@/components/ui/badge";
+import { DiscordButton } from "@/components/community/discord-button";
+import { publicFeatures } from "@/lib/env";
 import { ENTITIES } from "@/lib/entities";
 import { SEARCH_INDEX } from "@/lib/search";
 import { db } from "@/lib/db";
 import { formatMoney } from "@/lib/utils";
+import { timeRemaining } from "@/lib/giveaways";
 
 const accentText: Record<string, string> = {
   pink: "text-neon-pink",
@@ -21,10 +24,15 @@ const accentBorder: Record<string, string> = {
 };
 
 export default async function HomePage() {
-  const [fastestCar, topMoney, trending] = await Promise.all([
+  const [fastestCar, topMoney, trending, featuredGiveaway] = await Promise.all([
     db.car.findFirst({ orderBy: { topSpeed: "desc" } }),
     db.moneyMethod.findFirst({ orderBy: { profitPerHour: "desc" } }),
     Promise.resolve(SEARCH_INDEX.slice(0, 6)),
+    db.giveaway.findFirst({
+      where: { status: "ACTIVE", endsAt: { gt: new Date() } },
+      orderBy: [{ featured: "desc" }, { endsAt: "asc" }],
+      include: { _count: { select: { entries: true } } },
+    }),
   ]);
 
   return (
@@ -96,6 +104,32 @@ export default async function HomePage() {
           </Link>
         )}
       </section>
+
+      {/* Featured giveaway */}
+      {featuredGiveaway && (
+        <section className="container mt-6">
+          <Link
+            href={`/giveaways/${featuredGiveaway.slug}`}
+            className="group relative flex flex-col items-start gap-4 overflow-hidden rounded-3xl border border-neon-purple/30 bg-neon-purple/5 p-6 transition-all hover:border-neon-purple/60 sm:flex-row sm:items-center sm:justify-between sm:p-8"
+          >
+            <div className="flex items-center gap-4">
+              <span className="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-neon-gradient shadow-neon">
+                <Gift className="size-6 text-white" />
+              </span>
+              <div>
+                <p className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-neon-purple">
+                  Live giveaway · {timeRemaining(featuredGiveaway.endsAt)}
+                </p>
+                <p className="mt-1 font-display text-xl font-bold sm:text-2xl">{featuredGiveaway.title}</p>
+                <p className="text-sm text-muted-foreground">🎁 {featuredGiveaway.prize}</p>
+              </div>
+            </div>
+            <span className="inline-flex items-center gap-2 rounded-xl bg-neon-gradient px-5 py-3 text-sm font-semibold text-white shadow-neon transition-transform group-hover:scale-105">
+              Enter free <ArrowRight className="size-4" />
+            </span>
+          </Link>
+        </section>
+      )}
 
       {/* Database categories */}
       <section className="container py-20">
@@ -173,6 +207,24 @@ export default async function HomePage() {
           </div>
         </div>
       </section>
+
+      {/* Community / Discord */}
+      {publicFeatures.discord && (
+        <section className="container pb-24">
+          <div className="glass-card flex flex-col items-center gap-6 p-10 text-center sm:flex-row sm:justify-between sm:text-left">
+            <div>
+              <h2 className="font-display text-2xl font-bold tracking-tight sm:text-3xl">
+                Join the ViceHub community
+              </h2>
+              <p className="mt-2 max-w-xl text-muted-foreground">
+                Swap money methods, share builds and routes, and get the latest GTA 6
+                intel with thousands of other players on our Discord.
+              </p>
+            </div>
+            <DiscordButton variant="default" size="lg" className="shrink-0" />
+          </div>
+        </section>
+      )}
     </>
   );
 }

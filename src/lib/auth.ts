@@ -1,10 +1,11 @@
 import type { NextAuthOptions } from "next-auth";
 import { getServerSession } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
+import DiscordProvider from "next-auth/providers/discord";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import bcrypt from "bcryptjs";
 import { db } from "./db";
-import { env } from "./env";
+import { env, features } from "./env";
 
 /**
  * NextAuth (Credentials) config. JWT sessions are required for the Credentials
@@ -34,6 +35,16 @@ export const authOptions: NextAuthOptions = {
         return { id: user.id, name: user.name, email: user.email, image: user.image };
       },
     }),
+    // Optional "Continue with Discord" — only registered when OAuth creds exist,
+    // so the app builds and runs cleanly with no Discord configuration.
+    ...(features.discordAuth
+      ? [
+          DiscordProvider({
+            clientId: env.DISCORD_CLIENT_ID!,
+            clientSecret: env.DISCORD_CLIENT_SECRET!,
+          }),
+        ]
+      : []),
   ],
   callbacks: {
     async jwt({ token, user }) {

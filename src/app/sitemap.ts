@@ -13,14 +13,18 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     "/map",
     "/ai",
     "/pricing",
+    "/giveaways",
     ...ENTITIES.map((e) => e.route),
   ].map((path) => ({ url: `${base}${path}`, lastModified: now, changeFrequency: "weekly" as const, priority: path === "" ? 1 : 0.8 }));
 
-  const [cars, money, entities] = await Promise.all([
+  const [cars, money, entities, giveaways] = await Promise.all([
     db.car.findMany({ select: { slug: true, updatedAt: true } }),
     db.moneyMethod.findMany({ select: { slug: true, updatedAt: true } }),
     db.entity.findMany({ select: { type: true, slug: true, updatedAt: true } }),
+    db.giveaway.findMany({ select: { slug: true, updatedAt: true } }),
   ]);
+
+  const giveawayUrls = giveaways.map((g) => ({ url: `${base}/giveaways/${g.slug}`, lastModified: g.updatedAt, changeFrequency: "daily" as const, priority: 0.7 }));
 
   const carUrls = cars.map((c) => ({ url: `${base}/cars/${c.slug}`, lastModified: c.updatedAt, changeFrequency: "weekly" as const, priority: 0.7 }));
   const moneyUrls = money.map((m) => ({ url: `${base}/money/${m.slug}`, lastModified: m.updatedAt, changeFrequency: "weekly" as const, priority: 0.7 }));
@@ -34,5 +38,5 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     })
     .filter(Boolean) as MetadataRoute.Sitemap;
 
-  return [...staticRoutes, ...carUrls, ...moneyUrls, ...entityUrls];
+  return [...staticRoutes, ...carUrls, ...moneyUrls, ...entityUrls, ...giveawayUrls];
 }

@@ -29,6 +29,12 @@ export const env = {
 
   POSTHOG_KEY: get("NEXT_PUBLIC_POSTHOG_KEY"),
   POSTHOG_HOST: get("NEXT_PUBLIC_POSTHOG_HOST") ?? "https://us.i.posthog.com",
+
+  // Discord community invite link (shown in the "Join Discord" button) +
+  // optional OAuth credentials for "Continue with Discord" login.
+  DISCORD_URL: get("NEXT_PUBLIC_DISCORD_URL") ?? "",
+  DISCORD_CLIENT_ID: get("DISCORD_CLIENT_ID"),
+  DISCORD_CLIENT_SECRET: get("DISCORD_CLIENT_SECRET"),
 } as const;
 
 export const features = {
@@ -36,6 +42,7 @@ export const features = {
   map: Boolean(env.MAPBOX_TOKEN),
   stripe: Boolean(env.STRIPE_SECRET_KEY && env.STRIPE_PRICE_ID),
   analytics: Boolean(env.POSTHOG_KEY),
+  discordAuth: Boolean(env.DISCORD_CLIENT_ID && env.DISCORD_CLIENT_SECRET),
 } as const;
 
 /** Client-safe feature flags derived from NEXT_PUBLIC_* vars only. */
@@ -43,4 +50,5 @@ export const publicFeatures = {
   map: Boolean(process.env.NEXT_PUBLIC_MAPBOX_TOKEN),
   stripe: Boolean(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY),
   analytics: Boolean(process.env.NEXT_PUBLIC_POSTHOG_KEY),
+  discord: Boolean(process.env.NEXT_PUBLIC_DISCORD_URL),
 } as const;
