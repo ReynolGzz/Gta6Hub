@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Sparkles } from "lucide-react";
 import { ENTITIES } from "@/lib/entities";
+import { DiscordButton } from "@/components/community/discord-button";
 
 export function Footer() {
   return (
@@ -20,6 +21,7 @@ export function Footer() {
               The searchable GTA 6 intelligence platform. Find any answer in seconds —
               not 20-minute videos.
             </p>
+            <DiscordButton className="mt-5" />
           </div>
 
           <div className="md:col-span-2">
@@ -42,6 +44,7 @@ export function Footer() {
             <div className="mt-4 flex flex-col gap-2">
               <Link href="/ai" className="text-sm text-muted-foreground hover:text-neon-pink">AI Assistant</Link>
               <Link href="/map" className="text-sm text-muted-foreground hover:text-neon-pink">Interactive Map</Link>
+              <Link href="/giveaways" className="text-sm text-muted-foreground hover:text-neon-pink">Giveaways</Link>
               <Link href="/pricing" className="text-sm text-muted-foreground hover:text-neon-pink">Pricing</Link>
               <Link href="/dashboard" className="text-sm text-muted-foreground hover:text-neon-pink">Dashboard</Link>
             </div>

@@ -6,15 +6,16 @@ import { Search, Menu, X, Sparkles } from "lucide-react";
 import { useState } from "react";
 import { useCommandPalette } from "@/components/search/command-palette";
 import { Button } from "@/components/ui/button";
+import { DiscordButton } from "@/components/community/discord-button";
 import { ENTITIES } from "@/lib/entities";
 
 const PRIMARY_LINKS = [
   { label: "Cars", href: "/cars" },
   { label: "Money", href: "/money" },
   { label: "Weapons", href: "/weapons" },
-  { label: "Businesses", href: "/businesses" },
   { label: "Map", href: "/map" },
   { label: "AI", href: "/ai" },
+  { label: "Giveaways", href: "/giveaways" },
 ];
 
 export function Navbar() {
@@ -57,6 +58,8 @@ export function Navbar() {
             <kbd className="hidden rounded border border-white/10 bg-white/5 px-1.5 text-[10px] sm:inline">⌘K</kbd>
           </button>
 
+          <DiscordButton className="hidden sm:inline-flex" />
+
           {session?.user ? (
             <div className="hidden items-center gap-2 sm:flex">
               <Button asChild variant="ghost" size="sm">
@@ -95,10 +98,16 @@ export function Navbar() {
       {mobileOpen && (
         <div className="border-t border-white/5 bg-background/95 px-4 py-4 lg:hidden">
           <div className="grid grid-cols-2 gap-2">
-            {ENTITIES.map((e) => (
+            {[
+              ...ENTITIES.map((e) => ({ label: e.label, href: e.route })),
+              { label: "Map", href: "/map" },
+              { label: "AI Assistant", href: "/ai" },
+              { label: "Giveaways", href: "/giveaways" },
+              { label: "Pricing", href: "/pricing" },
+            ].map((e) => (
               <Link
-                key={e.kind}
-                href={e.route}
+                key={e.href}
+                href={e.href}
                 onClick={() => setMobileOpen(false)}
                 className="rounded-lg px-3 py-2 text-sm text-muted-foreground hover:bg-white/5 hover:text-foreground"
               >
@@ -127,6 +136,7 @@ export function Navbar() {
               </>
             )}
           </div>
+          <DiscordButton className="mt-2 w-full" />
         </div>
       )}
     </header>

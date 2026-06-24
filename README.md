@@ -25,6 +25,8 @@ hidden weapons, mission payouts, easter eggs and more.
 - **13 entity types** — cars, money, weapons, businesses, properties, missions, characters, crews, locations, activities, races, easter eggs, achievements, collectibles.
 - **GTA 6 AI assistant** — retrieval-augmented (RAG) answers grounded **only** in the database, with cited sources. Uses OpenAI when configured; falls back to a database-retrieval response otherwise.
 - **Interactive map** — Mapbox with category layers and progress tracking (graceful placeholder + marker list when no token).
+- **Giveaways / prizes** — a built-in, site-run giveaways hub (`/giveaways`) to drive recurring traffic: free entry, **bonus entries** for joining Discord or sharing, live countdowns, winners, and a featured-giveaway banner on the homepage.
+- **Discord integration** — a configurable **Join Discord** button (navbar, footer, homepage) plus optional **"Continue with Discord"** OAuth login, both behind env flags.
 - **Community** — Reddit-style votes and comments on every entity.
 - **Progress tracker & builds** — track collected cars/weapons/properties; create collections, routes, portfolios and loadouts.
 - **Premium tier ($4.99/mo)** — Stripe checkout with paywalled features (dev/free mode without keys).
@@ -63,6 +65,17 @@ Copy `.env.example` to `.env` and fill in any you want. All are optional:
 | `NEXT_PUBLIC_MAPBOX_TOKEN` | Live Mapbox map | Styled placeholder + marker list |
 | `STRIPE_SECRET_KEY` + `STRIPE_PRICE_ID` | Real subscriptions | Dev/free upgrade mode |
 | `NEXT_PUBLIC_POSTHOG_KEY` | Product analytics | No-op |
+| `NEXT_PUBLIC_DISCORD_URL` | "Join Discord" buttons | Buttons hidden |
+| `DISCORD_CLIENT_ID` + `DISCORD_CLIENT_SECRET` | "Continue with Discord" login | Credentials-only auth |
+
+## 🧪 Tests & CI
+
+```bash
+pnpm test            # Vitest unit suite (search, utils, entities, RAG fallback, env flags, giveaways)
+```
+
+GitHub Actions (`.github/workflows/ci.yml`) runs lint → tests → seed → build on
+every push and PR, hermetically (SQLite + dummy secret, no integrations needed).
 
 ## 📂 Project Structure
 
@@ -96,7 +109,8 @@ strings) specifically so it ports cleanly between SQLite and Postgres.
 ## 🗺️ Roadmap (MVP → Production)
 
 **Now (this build):** search, cars + money (full depth), all 13 entity types,
-AI RAG (OpenAI-optional), auth, community, progress/builds, map, Stripe, admin, SEO.
+AI RAG (OpenAI-optional), auth (+ optional Discord login), community,
+progress/builds, map, Stripe, admin, SEO, **giveaways hub**, **Discord**, tests + CI.
 
 **Next:**
 - Postgres/Supabase + `pgvector` for true vector RAG retrieval

@@ -8,8 +8,9 @@ import { Sparkles, Loader2 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
+import { DiscordIcon } from "@/components/ui/icons";
 
-export function LoginForm() {
+export function LoginForm({ discordEnabled = false }: { discordEnabled?: boolean }) {
   const router = useRouter();
   const sp = useSearchParams();
   const next = sp.get("next") ?? "/dashboard";
@@ -54,6 +55,21 @@ export function LoginForm() {
         <Button type="submit" className="w-full" disabled={loading}>
           {loading && <Loader2 className="size-4 animate-spin" />} Log in
         </Button>
+        {discordEnabled && (
+          <>
+            <div className="flex items-center gap-3 text-xs text-muted-foreground">
+              <span className="h-px flex-1 bg-white/10" /> or <span className="h-px flex-1 bg-white/10" />
+            </div>
+            <Button
+              type="button"
+              variant="secondary"
+              className="w-full border-[#5865F2]/30 hover:bg-[#5865F2]/10"
+              onClick={() => signIn("discord", { callbackUrl: next })}
+            >
+              <DiscordIcon className="size-4" /> Continue with Discord
+            </Button>
+          </>
+        )}
       </form>
       <p className="mt-6 text-center text-sm text-muted-foreground">
         No account? <Link href="/register" className="text-neon-pink hover:underline">Sign up</Link>
